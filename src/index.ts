@@ -3,10 +3,10 @@ import { bodyIsValid, deleteAll, getScores, saveScore } from "./server";
 const server = Bun.serve({
   routes: {
     "/": {
-      GET: (req) =>
+      GET: async (req) =>
         Response.json({
           status: 200,
-          ...getScores(),
+          ...(await getScores()),
         }),
       POST: async (req) => {
         const body: any = await req.json();
@@ -21,7 +21,7 @@ const server = Bun.serve({
             ...body,
           };
 
-          saveScore(score.name, score.score);
+          await saveScore(score.name, score.score);
 
           return Response.json({
             status: 200,
@@ -38,9 +38,12 @@ const server = Bun.serve({
       },
     },
     "/:start/:end": {
-      GET: (req) =>
+      GET: async (req) =>
         Response.json(
-          ...getScores(parseInt(req.params.start), parseInt(req.params.end)),
+          ...(await getScores(
+            parseInt(req.params.start),
+            parseInt(req.params.end),
+          )),
         ),
     },
     "/deleteallforreal": {

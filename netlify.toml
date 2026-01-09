@@ -1,6 +1,7 @@
 [build]
     command = "bun build . --target=bun --outdir dist/"
-    functions = "functions"
+    base = "src/"
+    functions = "src/functions"
     publish = "dist"
 
 [functions]

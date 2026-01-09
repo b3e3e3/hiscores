@@ -10,6 +10,9 @@
     "typescript": "^5"
   },
   "dependencies": {
-    "netlify-cli": "^23.13.3"
+    "@netlify/functions": "^5.1.2",
+    "netlify-cli": "^23.13.3",
+    "sqlite": "^5.1.1",
+    "sqlite3": "^5.1.7"
   }
 }
