@@ -1,12 +1,16 @@
-import { openDatabase, saveScore, getScores } from "./database";
+import { bodyIsValid, deleteAll, getScores, saveScore } from "./server";
 
 const server = Bun.serve({
   routes: {
     "/": {
-      GET: (req) => Response.json({ status: 200, ...getScores() }),
+      GET: (req) =>
+        Response.json({
+          status: 200,
+          ...getScores(),
+        }),
       POST: async (req) => {
         const body: any = await req.json();
-        if (!body.name || !body.score)
+        if (!bodyIsValid(body))
           return Response.json({
             status: 500,
             error: "Internal server error.",
@@ -34,30 +38,17 @@ const server = Bun.serve({
       },
     },
     "/:start/:end": {
-      GET: (req) => {
-        const start = parseInt(req.params.start);
-        const end = parseInt(req.params.end);
-        return Response.json({ status: 200, ...getScores(end, start) });
-      },
+      GET: (req) =>
+        Response.json(
+          ...getScores(parseInt(req.params.start), parseInt(req.params.end)),
+        ),
     },
     "/deleteallforreal": {
-      GET: async (req) => {
-        try {
-          using db = openDatabase();
-          db.run(`DELETE FROM scores`);
-        } catch (error) {
-          console.log(error);
-          return Response.json({
-            status: 500,
-            error: "Internal server error.",
-          });
-        }
-
-        return Response.json({
+      GET: async (req) =>
+        Response.json({
           status: 200,
-          message: "All scores deleted.",
-        });
-      },
+          message: "All scores deleted successfully.",
+        }),
     },
   },
 });

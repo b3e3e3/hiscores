@@ -21,6 +21,11 @@ initDatabase();
 
 export const openDatabase = () => new Database(dbPath);
 
+export function deleteAll() {
+  using db = openDatabase();
+  db.run(`DELETE FROM scores`);
+}
+
 export function saveScore(name: string, score: number) {
   using db = openDatabase();
 
@@ -59,4 +64,8 @@ export function getScores(end: number = 50, start: number = 0) {
   }
 
   return [];
+}
+
+export function bodyIsValid(body: any): boolean {
+  return body.name && body.score;
 }
