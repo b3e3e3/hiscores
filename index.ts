@@ -3,18 +3,14 @@ import { openDatabase, saveScore, getScores } from "./database";
 const server = Bun.serve({
   routes: {
     "/": {
-      GET: (req) => {
-        return Response.json({ status: 200, ...getScores() });
-      },
+      GET: (req) => Response.json({ status: 200, ...getScores() }),
       POST: async (req) => {
         const body: any = await req.json();
-        if (!body.name || !body.score) {
+        if (!body.name || !body.score)
           return Response.json({
-            status: 404,
-            error: "Malformed body.",
-            body,
+            status: 500,
+            error: "Internal server error.",
           });
-        }
 
         try {
           const score: { name: string; score: number } = {
